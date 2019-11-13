@@ -2,12 +2,18 @@
 '''
 Main AVClass class
 '''
-
+import os
 import re
 import string
 from collections import OrderedDict as OrdDict
 from collections import namedtuple
 from operator import itemgetter, attrgetter
+
+package_dir = os.path.dirname(__file__)
+# Default alias file
+default_alias_file = os.path.join(package_dir, "data/default.aliases")
+# Default generic tokens file
+default_gen_file = os.path.join(package_dir, "data/default.generics")
 
 SampleInfo = namedtuple('SampleInfo', 
                         ['md5', 'sha1', 'sha256', 'labels'])
@@ -20,10 +26,10 @@ class AvLabels:
     def __init__(self, gen_file = None, alias_file = None, av_file = None):
 
         # Read generic token set from file
-        self.gen_set = self.read_generics(gen_file) if gen_file else set()
+        self.gen_set = self.read_generics(gen_file) if gen_file else self.read_generics(default_gen_file)
 
         # Read aliases map from file
-        self.aliases_map = self.read_aliases(alias_file) if alias_file else {}
+        self.aliases_map = self.read_aliases(alias_file) if alias_file else self.read_aliases(default_alias_file)
 
         # Read AV engine set from file
         self.avs = self.read_avs(av_file) if av_file else None
